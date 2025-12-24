@@ -1,0 +1,86 @@
+/* css/login.css - Estilos específicos del login */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.logo h1 {
+    font-size: 32px;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.logo p {
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.form-group input::placeholder {
+    color: var(--text-light);
+}
+
+.footer {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 13px;
+    color: var(--text-light);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .login-box {
+        padding: 24px;
+    }
+    
+    .logo h1 {
+        font-size: 24px;
+    }
+}

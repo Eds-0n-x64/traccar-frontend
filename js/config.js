@@ -4,7 +4,14 @@
 const CONFIG = {
     // URL del backend - CAMBIAR en producción
     API_BASE_URL: 'http://162.245.191.47:8082/api',
-    // WS_BASE_URL: 'ws://localhost:8000/ws',
+    WS_BASE_URL: 'ws://162.245.191.47:8082/ws',
+
+    //Endpoints
+    ENDPOINTS: {
+        LOGIN: '/api/session',
+        DEVICES: '/api/devices',
+        POSITIONS: '/api/positions'
+    },
     
     // Configuración del mapa
     MAP: {
@@ -17,10 +24,23 @@ const CONFIG = {
     // Intervalos de actualización (milisegundos)
     UPDATE_INTERVAL: 5000, // 5 segundos
     
-    // Configuración de seguridad
-    //TOKEN_KEY: 'taxi_auth_token',
-    //TOKEN_EXPIRY_KEY: 'taxi_token_expiry'
+    // LocalStorage keys
+    STORAGE_KEYS: {
+        TOKEN: 'taxi_auth_token',
+        USER_DATA: 'taxi_user_data',
+        SESSION_EXPIRY: 'taxi_session_expiry'
+    },
+    
+    // Timeouts
+    REQUEST_TIMEOUT: 10000, // 10 segundos
+    SESSION_DURATION: 8 * 60 * 60 * 1000 // 8 horas en milisegundos
 };
+
+// Hacer CONFIG disponible globalmente
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CONFIG;
+}
+
 
 // No exportar información sensible
 // Las API keys deben ir en variables de entorno
