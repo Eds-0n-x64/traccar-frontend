@@ -17,14 +17,14 @@
 
             <form id="login-form">
                 <div class="form-group">
-                    <label for="username">Usuario</label>
+                    <label for="email">Email</label>
                     <input 
-                        type="text" 
-                        id="username" 
-                        name="username" 
-                        placeholder="Ingresa tu usuario"
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Ingresa tu email"
                         required
-                        autocomplete="username"
+                        autocomplete="email"
                     >
                 </div>
 
@@ -41,6 +41,7 @@
                 </div>
 
                 <div id="error-message" class="error-message" style="display: none;"></div>
+                <div id="success-message" class="success-message" style="display: none;"></div>
 
                 <button type="submit" class="btn-primary" id="login-btn">
                     Iniciar Sesión
@@ -72,17 +73,17 @@
             }
 
             const loginForm = document.getElementById('login-form');
-            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
 
             loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                const username = usernameInput.value;
+                const email = emailInput.value;
                 const password = passwordInput.value;
 
                 try {
-                    const result = await Auth.login(username, password);
+                    const result = await Auth.login(email, password);
                     
                     if (result.success) {
                         Utils.showSuccess('¡Login exitoso! Redirigiendo...');
@@ -100,8 +101,8 @@
                 }
             });
 
-            // Focus automático en el campo de usuario
-            usernameInput.focus();
+            // Focus automático en el campo de email
+            emailInput.focus();
         });
     </script>
 </body>

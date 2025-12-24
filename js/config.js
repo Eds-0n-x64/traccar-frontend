@@ -3,7 +3,7 @@
 
 const CONFIG = {
     // URL del backend - CAMBIAR en producción
-    API_BASE_URL: 'http://162.245.191.47:8082/api',
+    API_BASE_URL: 'http://162.245.191.47:8082',
     WS_BASE_URL: 'ws://162.245.191.47:8082/ws',
 
     //Endpoints
