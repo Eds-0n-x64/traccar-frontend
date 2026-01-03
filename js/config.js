@@ -1,12 +1,12 @@
 // js/config.js
 // Configuración de la aplicación
 
+// js/config.js
 const CONFIG = {
-    // URL del backend - CAMBIAR en producción
-    API_BASE_URL: 'http://162.245.191.47:8082',
-    WS_BASE_URL: 'ws://162.245.191.47:8082/ws',
-
-    //Endpoints
+    // URL del backend (ahora apunta al proxy local)
+    API_BASE_URL: 'http://localhost:3000',
+    
+    // Endpoints
     ENDPOINTS: {
         LOGIN: '/api/session',
         DEVICES: '/api/devices',
@@ -21,9 +21,6 @@ const CONFIG = {
         MIN_ZOOM: 10
     },
     
-    // Intervalos de actualización (milisegundos)
-    UPDATE_INTERVAL: 5000, // 5 segundos
-    
     // LocalStorage keys
     STORAGE_KEYS: {
         TOKEN: 'taxi_auth_token',
@@ -32,11 +29,10 @@ const CONFIG = {
     },
     
     // Timeouts
-    REQUEST_TIMEOUT: 10000, // 10 segundos
-    SESSION_DURATION: 8 * 60 * 60 * 1000 // 8 horas en milisegundos
+    REQUEST_TIMEOUT: 10000,
+    SESSION_DURATION: 8 * 60 * 60 * 1000
 };
 
-// Hacer CONFIG disponible globalmente
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }

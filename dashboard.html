@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Rastreo GPS</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>🚕 Track Car</h1>
+            </div>
+            <div class="header-right">
+                <span class="user-info" id="user-name">Cargando...</span>
+                <button class="btn-logout" id="btn-logout">Cerrar Sesión</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenedor principal -->
+    <div class="main-container">
+        <!-- Sidebar con lista de vehículos -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Vehículos</h2>
+                <button class="btn-refresh" id="btn-refresh" title="Actualizar">
+                    🔄
+                </button>
+                <button class="btn-refresh" id="btn-reset-view" title="Resetear vista">
+                    🎯
+                </button>
+            </div>
+            
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Buscar vehículo..."
+                    class="search-input"
+                >
+            </div>
+
+            <div class="vehicles-list" id="vehicles-list">
+                <div class="loader">
+                    <div class="spinner"></div>
+                    <p>Cargando vehículos...</p>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total:</span>
+                        <span class="stat-value" id="total-vehicles">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Online:</span>
+                        <span class="stat-value online" id="online-vehicles">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Offline:</span>
+                        <span class="stat-value offline" id="offline-vehicles">0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Mapa -->
+        <main class="map-container">
+            <div id="map"></div>
+            
+            <!-- Panel de información del vehículo seleccionado -->
+            <div class="vehicle-info-panel" id="vehicle-info-panel" style="display: none;">
+                <button class="close-btn" id="close-info-panel">✕</button>
+                <h3 id="info-vehicle-name">-</h3>
+                <div class="info-content" id="info-content">
+                    <p>Selecciona un vehículo para ver detalles</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/map.js"></script>
+    <script>
+        // Proteger la página - solo usuarios autenticados
+        Auth.requireAuth();
+
+        // Inicializar cuando cargue la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Mostrar nombre del usuario
+            const user = Auth.getCurrentUser();
+            document.getElementById('user-name').textContent = user.name || user.email;
+
+            // Botón de logout
+            document.getElementById('btn-logout').addEventListener('click', () => {
+                if (confirm('¿Deseas cerrar sesión?')) {
+                    Auth.logout();
+                }
+            });
+
+            // Inicializar el mapa
+            await MapManager.init();
+
+            // Botón de actualizar
+            document.getElementById('btn-refresh').addEventListener('click', () => {
+                MapManager.refreshData();
+            });
+
+            // Botón para resetear vista
+            document.getElementById('btn-reset-view').addEventListener('click', () => {
+             MapManager.refreshData(true); // true = resetear vista
+            });
+
+            // Búsqueda de vehículos
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                MapManager.filterVehicles(e.target.value);
+            });
+
+            // Cerrar panel de información
+            document.getElementById('close-info-panel').addEventListener('click', () => {
+                document.getElementById('vehicle-info-panel').style.display = 'none';
+            });
+
+            // Auto-actualizar cada 10 segundos
+            setInterval(() => {
+                MapManager.updatePositions();
+            }, 10000);
+        });
+    </script>
+</body>
+</html>

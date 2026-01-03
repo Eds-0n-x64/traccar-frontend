@@ -1,25 +1,32 @@
 // js/api.js
 // Módulo para consumir las APIs del backend
 
+// js/api.js
 const API = {
     /**
      * Realiza una petición GET autenticada
      */
     async get(endpoint) {
         try {
+            console.log('Haciendo petición a:', `${CONFIG.API_BASE_URL}${endpoint}`);
+            console.log('Cookies actuales:', document.cookie);
+            
             const response = await fetch(`${CONFIG.API_BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
                 },
-                credentials: 'include', // Importante: enviar cookies de sesión
+                credentials: 'include', // Enviar cookies
                 signal: AbortSignal.timeout(CONFIG.REQUEST_TIMEOUT)
             });
 
+            console.log('Status de respuesta:', response.status);
+            console.log('Headers de respuesta:', [...response.headers.entries()]);
+
             if (response.status === 401) {
-                // Sesión expirada
-                Auth.logout();
-                throw new Error('Sesión expirada. Por favor inicia sesión nuevamente');
+                console.error('401 - Sesión no autorizada');
+                // NO hacer logout automáticamente, mostrar error
+                throw new Error('No autorizado. Las cookies de sesión no están funcionando.');
             }
 
             if (!response.ok) {
@@ -28,6 +35,7 @@ const API = {
 
             return await response.json();
         } catch (error) {
+            console.error('Error en petición GET:', error);
             if (error.name === 'AbortError') {
                 throw new Error('Tiempo de espera agotado');
             }
@@ -51,13 +59,11 @@ const API = {
 
     /**
      * Obtiene las posiciones de todos los dispositivos
-     * @param {Array} deviceIds - Array opcional de IDs de dispositivos específicos
      */
     async getPositions(deviceIds = null) {
         try {
             let endpoint = CONFIG.ENDPOINTS.POSITIONS;
             
-            // Si se especifican IDs, filtrar por ellos
             if (deviceIds && deviceIds.length > 0) {
                 const params = new URLSearchParams();
                 deviceIds.forEach(id => params.append('deviceId', id));

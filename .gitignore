@@ -154,3 +154,8 @@ Thumbs.db
 # Archivos temporales
 *.tmp 
 *.swp 
+
+# Node
+node_modules/
+package-lock.json
+package.json

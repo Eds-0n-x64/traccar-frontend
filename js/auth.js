@@ -1,7 +1,6 @@
 // js/auth.js
 // Manejo de autenticación
 
-// js/auth.js
 const Auth = {
     /**
      * Realiza el login del usuario
@@ -66,6 +65,14 @@ const Auth = {
                 throw new Error('Respuesta del servidor inválida');
             }
 
+            // NUEVO: Verificar si hay un token en los headers
+            const authHeader = response.headers.get('Authorization');
+            const sessionCookie = response.headers.get('Set-Cookie');
+            
+            console.log('Auth Header:', authHeader);
+            console.log('Set-Cookie:', sessionCookie);
+            console.log('Todas las cookies:', document.cookie);
+
             // Guardar sesión
             this.saveSession(data);
 
@@ -86,7 +93,7 @@ const Auth = {
     /**
      * Guarda la sesión del usuario
      */
-    saveSession(userData) {
+    saveSession(userData, authToken = null) {
         // Guardar los datos del usuario completos (excepto password)
         const safeUserData = {
             id: userData.id,
@@ -118,8 +125,15 @@ const Auth = {
         localStorage.setItem(CONFIG.STORAGE_KEYS.SESSION_EXPIRY, 
             (loginTime + CONFIG.SESSION_DURATION).toString());
         
-        // Guardar flag de sesión activa
-        localStorage.setItem(CONFIG.STORAGE_KEYS.TOKEN, 'session_active');
+        // Si hay un token en el header, guardarlo
+        if (authToken) {
+            localStorage.setItem(CONFIG.STORAGE_KEYS.TOKEN, authToken);
+        } else {
+            // Si no, guardar flag de sesión activa
+            localStorage.setItem(CONFIG.STORAGE_KEYS.TOKEN, 'session_active');
+        }
+        
+        console.log('Sesión guardada correctamente');
     },
 
     /**
@@ -180,9 +194,9 @@ const Auth = {
             credentials: 'include'
         }).catch(err => console.log('Error en logout:', err));
         
-        // Redirigir al login
+        // Redirigir al login solo si no estamos ya ahí
         const currentPath = window.location.pathname;
-        if (!currentPath.endsWith('index.html') && currentPath !== '/') {
+        if (!currentPath.endsWith('index.html') && currentPath !== '/' && currentPath !== '') {
             window.location.href = 'index.html';
         }
     },
